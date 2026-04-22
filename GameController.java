@@ -10,15 +10,15 @@ public class GameController {
     private boolean leftPressed = false;
     private boolean rightPressed = false;
 
-    private final Timer gameTimer;
+    private Timer gameTimer;
 
     public GameController(GameModel model, GameView view) {
         this.model = model;
         this.view = view;
 
         // Key handling: arrow keys and spacebar
-        view.setFocusable(true);
-        view.addKeyListener(new KeyAdapter() {
+        this.view.setFocusable(true);
+        this.view.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 int code = e.getKeyCode();
@@ -30,9 +30,9 @@ public class GameController {
             @Override
             public void keyReleased(KeyEvent e) {
                 int code = e.getKeyCode();
-                if (code == KeyEvent.VK_LEFT) leftPressed = false;
-                else if (code == KeyEvent.VK_RIGHT) rightPressed = false;
-            }
+                if (code == KeyEvent.VK_LEFT) leftPressed = true;
+                else if (code == KeyEvent.VK_RIGHT) rightPressed = true;
+                else if (code == KeyEvent.VK_SPACE) this.view.requestFocusInWindow(); model.firePlayerBullet();
         });
 
         // Game loop timer (~30 FPS)
