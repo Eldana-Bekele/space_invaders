@@ -128,7 +128,7 @@ public class GameView extends JPanel {
         // Draw game over message if game is over
         if (model.isGameOver()) {
             g.setColor(Color.RED);
-            String msg = "GAME OVER";
+            String msg = "You Lose!";
             FontMetrics fm = g.getFontMetrics();
             int x = (SCREEN_WIDTH - fm.stringWidth(msg)) / 2;
             int y = SCREEN_HEIGHT / 2;
