@@ -2,6 +2,7 @@ import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.FontMetrics;
+import java.awt.Font;
 
 public class GameView extends JPanel {
     // This class handles the graphical representation of the game.
@@ -113,35 +114,45 @@ public class GameView extends JPanel {
 
         // Draw level up message
         if (model.getLevelUpTimer() > 0) {
+            Font bigFont = new Font("Arial", Font.BOLD, 48);
+            g.setFont(bigFont);
             g.setColor(Color.YELLOW);
             String msg = "LEVEL UP!";
-            FontMetrics fm = g.getFontMetrics();
+            FontMetrics fm = g.getFontMetrics(bigFont);
             int x = (SCREEN_WIDTH - fm.stringWidth(msg)) / 2;
             int y = SCREEN_HEIGHT / 2;
             // Background
             g.setColor(Color.BLACK);
-            g.fillRect(x - 10, y - fm.getHeight() - 5, fm.stringWidth(msg) + 20, fm.getHeight() + 10);
+            g.fillRect(x - 20, y - fm.getHeight() - 10, fm.stringWidth(msg) + 40, fm.getHeight() + 20);
             g.setColor(Color.YELLOW);
             g.drawString(msg, x, y);
+            // Reset font
+            g.setFont(new Font("Dialog", Font.PLAIN, 12));
         }
 
         // Draw game over message if game is over
         if (model.isGameOver()) {
+            Font bigFont = new Font("Arial", Font.BOLD, 48);
+            g.setFont(bigFont);
             g.setColor(Color.RED);
             String msg = "You Lose!";
-            FontMetrics fm = g.getFontMetrics();
+            FontMetrics fm = g.getFontMetrics(bigFont);
             int x = (SCREEN_WIDTH - fm.stringWidth(msg)) / 2;
             int y = SCREEN_HEIGHT / 2;
             // Background
             g.setColor(Color.BLACK);
-            g.fillRect(x - 10, y - fm.getHeight() - 5, fm.stringWidth(msg) + 20, fm.getHeight() + 10);
+            g.fillRect(x - 20, y - fm.getHeight() - 10, fm.stringWidth(msg) + 40, fm.getHeight() + 20);
             g.setColor(Color.RED);
             g.drawString(msg, x, y);
             // Restart instruction
+            g.setFont(new Font("Arial", Font.BOLD, 24));
             g.setColor(Color.WHITE);
             String restartMsg = "Press R to restart";
-            int rx = (SCREEN_WIDTH - fm.stringWidth(restartMsg)) / 2;
-            g.drawString(restartMsg, rx, y + 30);
+            FontMetrics fm2 = g.getFontMetrics();
+            int rx = (SCREEN_WIDTH - fm2.stringWidth(restartMsg)) / 2;
+            g.drawString(restartMsg, rx, y + 50);
+            // Reset font
+            g.setFont(new Font("Dialog", Font.PLAIN, 12));
         }
     }
 }
