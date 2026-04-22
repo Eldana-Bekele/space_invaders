@@ -60,14 +60,31 @@ public class GameView extends JPanel {
         }
 
         // Draw aliens
-        g.setColor(Color.GREEN);
         boolean[][] alive = model.getAliensAlive();
         int fx = model.getAlienFormationX();
         int fy = model.getAlienFormationY();
         for (int r = 0; r < ALIEN_ROWS; r++) {
             for (int c = 0; c < ALIEN_COLS; c++) {
                 if (alive[r][c]) {
-                    g.fillOval(fx + c * ALIEN_SPACING_X, fy + r * ALIEN_SPACING_Y, ALIEN_WIDTH, ALIEN_HEIGHT);
+                    int ax = fx + c * ALIEN_SPACING_X;
+                    int ay = fy + r * ALIEN_SPACING_Y;
+                    // Different colors per row
+                    switch (r) {
+                        case 0: g.setColor(Color.GREEN); break;
+                        case 1: g.setColor(Color.BLUE); break;
+                        case 2: g.setColor(Color.MAGENTA); break;
+                        case 3: g.setColor(Color.ORANGE); break;
+                        case 4: g.setColor(Color.PINK); break;
+                    }
+                    g.fillRect(ax, ay, ALIEN_WIDTH, ALIEN_HEIGHT);
+                    // Eyes
+                    g.setColor(Color.BLACK);
+                    g.fillOval(ax + 5, ay + 5, 5, 5);
+                    g.fillOval(ax + ALIEN_WIDTH - 10, ay + 5, 5, 5);
+                    // Legs
+                    g.setColor(Color.WHITE);
+                    g.drawLine(ax + 5, ay + ALIEN_HEIGHT, ax + 5, ay + ALIEN_HEIGHT + 5);
+                    g.drawLine(ax + ALIEN_WIDTH - 5, ay + ALIEN_HEIGHT, ax + ALIEN_WIDTH - 5, ay + ALIEN_HEIGHT + 5);
                 }
             }
         }
@@ -93,18 +110,38 @@ public class GameView extends JPanel {
 
         // Draw instructions
         g.drawString("Arrow keys: move, Space: fire", 10, SCREEN_HEIGHT - 40);
-        if (model.isGameOver()) {
-            g.drawString("Press R to restart", 10, SCREEN_HEIGHT - 20);
+
+        // Draw level up message
+        if (model.getLevelUpTimer() > 0) {
+            g.setColor(Color.YELLOW);
+            String msg = "LEVEL UP!";
+            FontMetrics fm = g.getFontMetrics();
+            int x = (SCREEN_WIDTH - fm.stringWidth(msg)) / 2;
+            int y = SCREEN_HEIGHT / 2;
+            // Background
+            g.setColor(Color.BLACK);
+            g.fillRect(x - 10, y - fm.getHeight() - 5, fm.stringWidth(msg) + 20, fm.getHeight() + 10);
+            g.setColor(Color.YELLOW);
+            g.drawString(msg, x, y);
         }
 
         // Draw game over message if game is over
         if (model.isGameOver()) {
             g.setColor(Color.RED);
-            String msg = "Game Over";
+            String msg = "GAME OVER";
             FontMetrics fm = g.getFontMetrics();
             int x = (SCREEN_WIDTH - fm.stringWidth(msg)) / 2;
             int y = SCREEN_HEIGHT / 2;
+            // Background
+            g.setColor(Color.BLACK);
+            g.fillRect(x - 10, y - fm.getHeight() - 5, fm.stringWidth(msg) + 20, fm.getHeight() + 10);
+            g.setColor(Color.RED);
             g.drawString(msg, x, y);
+            // Restart instruction
+            g.setColor(Color.WHITE);
+            String restartMsg = "Press R to restart";
+            int rx = (SCREEN_WIDTH - fm.stringWidth(restartMsg)) / 2;
+            g.drawString(restartMsg, rx, y + 30);
         }
     }
 }

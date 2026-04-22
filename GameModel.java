@@ -34,6 +34,7 @@ public class GameModel {
     private int alienBulletSpeed = 20;
     private int alienShootChance = 5;
     private int explosionTimer = 0;
+    private int levelUpTimer = 0;
     private List<Star> stars = new ArrayList<>();
     private Random random = new Random();
 
@@ -69,6 +70,7 @@ public class GameModel {
         alienBullets.clear();
         score = 0;
         explosionTimer = 0;
+        levelUpTimer = 0;
         lives = 3;
     }
 
@@ -107,6 +109,10 @@ public class GameModel {
         // Decrement explosion timer
         if (explosionTimer > 0) {
             explosionTimer--;
+        }
+        // Decrement level up timer
+        if (levelUpTimer > 0) {
+            levelUpTimer--;
         }
 
         // Move player
@@ -239,6 +245,7 @@ public class GameModel {
         alienFormationY = 50;
         movingRight = true;
         alienBullets.clear();
+        levelUpTimer = 60; // 1.5 seconds
     }
 
     public boolean isGameOver() {
@@ -257,6 +264,7 @@ public class GameModel {
     public int getLevel() { return level; }
     public List<Star> getStars() { return stars; }
     public int getExplosionTimer() { return explosionTimer; }
+    public int getLevelUpTimer() { return levelUpTimer; }
 
     public static class Bullet {
         public int x, y;
