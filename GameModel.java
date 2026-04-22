@@ -8,7 +8,7 @@ public class GameModel {
     private static final int SCREEN_HEIGHT = 600;
     private static final int PLAYER_WIDTH = 50;
     private static final int PLAYER_HEIGHT = 50;
-    private static final int PLAYER_SPEED = 15;
+    private static final int PLAYER_SPEED = 6;
     private static final int BULLET_SPEED = 30;
     private static final int ALIEN_ROWS = 5;
     private static final int ALIEN_COLS = 11;
@@ -20,6 +20,8 @@ public class GameModel {
     private static final int FORMATION_DROP = 10;
 
     private int playerX = SCREEN_WIDTH / 2;
+    private boolean leftPressed = false;
+    private boolean rightPressed = false;
     private boolean[][] aliensAlive = new boolean[ALIEN_ROWS][ALIEN_COLS];
     private int alienFormationX = 50;
     private int alienFormationY = 50;
@@ -40,6 +42,8 @@ public class GameModel {
 
     public void reset() {
         playerX = SCREEN_WIDTH / 2;
+        leftPressed = false;
+        rightPressed = false;
         for (int r = 0; r < ALIEN_ROWS; r++) {
             for (int c = 0; c < ALIEN_COLS; c++) {
                 aliensAlive[r][c] = true;
@@ -55,11 +59,19 @@ public class GameModel {
     }
 
     public void movePlayerLeft() {
-        playerX = Math.max(0, playerX - PLAYER_SPEED);
+        leftPressed = true;
     }
 
     public void movePlayerRight() {
-        playerX = Math.min(SCREEN_WIDTH - PLAYER_WIDTH, playerX + PLAYER_SPEED);
+        rightPressed = true;
+    }
+
+    public void stopPlayerLeft() {
+        leftPressed = false;
+    }
+
+    public void stopPlayerRight() {
+        rightPressed = false;
     }
 
     public void firePlayerBullet() {
@@ -69,6 +81,14 @@ public class GameModel {
     }
 
     public void update() {
+        // Move player
+        if (leftPressed) {
+            playerX = Math.max(0, playerX - PLAYER_SPEED);
+        }
+        if (rightPressed) {
+            playerX = Math.min(SCREEN_WIDTH - PLAYER_WIDTH, playerX + PLAYER_SPEED);
+        }
+
         // Advance player bullet
         if (playerBullet != null) {
             playerBullet.y -= BULLET_SPEED;

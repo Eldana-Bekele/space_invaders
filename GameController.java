@@ -47,12 +47,24 @@ public class GameController {
                         break;
                 }
             }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_LEFT:
+                        model.stopPlayerLeft();
+                        break;
+                    case KeyEvent.VK_RIGHT:
+                        model.stopPlayerRight();
+                        break;
+                }
+            }
         });
 
         frame.setVisible(true);
 
-        // Start game loop timer (~60 FPS)
-        timerRef[0] = new Timer(16, e -> {
+        // Start game loop timer (~40 FPS)
+        timerRef[0] = new Timer(25, e -> {
             model.update();
             view.repaint();
             if (model.isGameOver()) {
