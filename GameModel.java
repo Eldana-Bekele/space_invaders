@@ -16,7 +16,7 @@ public class GameModel {
     private static final int ALIEN_HEIGHT = 30;
     private static final int ALIEN_SPACING_X = 50;
     private static final int ALIEN_SPACING_Y = 40;
-    private static final int FORMATION_SPEED = 3;
+    private int formationSpeed = 3;
     private static final int FORMATION_DROP = 10;
 
     private int playerX = SCREEN_WIDTH / 2;
@@ -30,6 +30,10 @@ public class GameModel {
     private List<Bullet> alienBullets = new ArrayList<>();
     private int score = 0;
     private int lives = 3;
+    private int level = 1;
+    private int alienBulletSpeed = 20;
+    private int alienShootChance = 5;
+    private List<Star> stars = new ArrayList<>();
     private Random random = new Random();
 
     public GameModel() {
@@ -38,12 +42,19 @@ public class GameModel {
                 aliensAlive[r][c] = true;
             }
         }
+        for (int i = 0; i < 50; i++) {
+            stars.add(new Star(random.nextInt(SCREEN_WIDTH), random.nextInt(SCREEN_HEIGHT), 1));
+        }
     }
 
     public void reset() {
         playerX = SCREEN_WIDTH / 2;
         leftPressed = false;
         rightPressed = false;
+        level = 1;
+        alienBulletSpeed = 20;
+        formationSpeed = 3;
+        alienShootChance = 5;
         for (int r = 0; r < ALIEN_ROWS; r++) {
             for (int c = 0; c < ALIEN_COLS; c++) {
                 aliensAlive[r][c] = true;
@@ -81,6 +92,15 @@ public class GameModel {
     }
 
     public void update() {
+        // Move stars
+        for (Star s : stars) {
+            s.y += s.dy;
+            if (s.y > SCREEN_HEIGHT) {
+                s.y = 0;
+                s.x = random.nextInt(SCREEN_WIDTH);
+            }
+        }
+
         // Move player
         if (leftPressed) {
             playerX = Math.max(0, playerX - PLAYER_SPEED);
@@ -100,7 +120,7 @@ public class GameModel {
         // Advance alien bullets
         for (Iterator<Bullet> it = alienBullets.iterator(); it.hasNext(); ) {
             Bullet b = it.next();
-            b.y += BULLET_SPEED;
+            b.y += alienBulletSpeed;
             if (b.y > SCREEN_HEIGHT) {
                 it.remove();
             }
@@ -108,28 +128,33 @@ public class GameModel {
 
         // Move alien formation
         if (movingRight) {
-            alienFormationX += FORMATION_SPEED;
+            alienFormationX += formationSpeed;
             if (alienFormationX + ALIEN_COLS * ALIEN_SPACING_X > SCREEN_WIDTH) {
-                alienFormationX -= FORMATION_SPEED;
+                alienFormationX -= formationSpeed;
                 alienFormationY += FORMATION_DROP;
                 movingRight = false;
             }
         } else {
-            alienFormationX -= FORMATION_SPEED;
+            alienFormationX -= formationSpeed;
             if (alienFormationX < 0) {
-                alienFormationX += FORMATION_SPEED;
+                alienFormationX += formationSpeed;
                 alienFormationY += FORMATION_DROP;
                 movingRight = true;
             }
         }
 
-        // Random alien fire (5% chance per update)
-        if (random.nextInt(100) < 5) {
+        // Random alien fire
+        if (random.nextInt(100) < alienShootChance) {
             fireAlienBullet();
         }
 
         // Check collisions
         checkCollisions();
+
+        // Check for level up
+        if (!hasAliensLeft()) {
+            levelUp();
+        }
     }
 
     private void fireAlienBullet() {
@@ -181,14 +206,34 @@ public class GameModel {
         }
     }
 
-    public boolean isGameOver() {
-        if (lives <= 0) return true;
+    private boolean hasAliensLeft() {
         for (boolean[] row : aliensAlive) {
             for (boolean alive : row) {
-                if (alive) return false;
+                if (alive) return true;
             }
         }
-        return true;
+        return false;
+    }
+
+    private void levelUp() {
+        level++;
+        alienBulletSpeed += 2;
+        formationSpeed += 1;
+        alienShootChance += 1;
+        // Reset aliens
+        for (int r = 0; r < ALIEN_ROWS; r++) {
+            for (int c = 0; c < ALIEN_COLS; c++) {
+                aliensAlive[r][c] = true;
+            }
+        }
+        alienFormationX = 50;
+        alienFormationY = 50;
+        movingRight = true;
+        alienBullets.clear();
+    }
+
+    public boolean isGameOver() {
+        return lives <= 0;
     }
 
     // Getters
@@ -200,6 +245,8 @@ public class GameModel {
     public List<Bullet> getAlienBullets() { return alienBullets; }
     public int getScore() { return score; }
     public int getLives() { return lives; }
+    public int getLevel() { return level; }
+    public List<Star> getStars() { return stars; }
 
     public static class Bullet {
         public int x, y;
@@ -209,6 +256,16 @@ public class GameModel {
             this.x = x;
             this.y = y;
             this.isPlayer = isPlayer;
+        }
+    }
+
+    public static class Star {
+        public int x, y, dy;
+
+        public Star(int x, int y, int dy) {
+            this.x = x;
+            this.y = y;
+            this.dy = dy;
         }
     }
 }

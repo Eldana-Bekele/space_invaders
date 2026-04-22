@@ -37,12 +37,10 @@ public class GameView extends JPanel {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-        // Draw stars (simple random dots)
+        // Draw stars
         g.setColor(Color.WHITE);
-        for (int i = 0; i < 50; i++) {
-            int x = (int) (Math.random() * SCREEN_WIDTH);
-            int y = (int) (Math.random() * SCREEN_HEIGHT);
-            g.fillRect(x, y, 1, 1);
+        for (GameModel.Star s : model.getStars()) {
+            g.fillRect(s.x, s.y, 1, 1);
         }
 
         // Draw player spaceship (triangle)
@@ -82,6 +80,7 @@ public class GameView extends JPanel {
         g.setColor(Color.WHITE);
         g.drawString("Score: " + model.getScore(), 10, 20);
         g.drawString("Lives: " + model.getLives(), 10, 40);
+        g.drawString("Level: " + model.getLevel(), 10, 60);
 
         // Draw instructions
         g.drawString("Arrow keys: move, Space: fire", 10, SCREEN_HEIGHT - 40);
