@@ -8,16 +8,16 @@ public class GameModel {
     private static final int SCREEN_HEIGHT = 600;
     private static final int PLAYER_WIDTH = 50;
     private static final int PLAYER_HEIGHT = 50;
-    private static final int PLAYER_SPEED = 10;
-    private static final int BULLET_SPEED = 20;
+    private static final int PLAYER_SPEED = 15;
+    private static final int BULLET_SPEED = 30;
     private static final int ALIEN_ROWS = 5;
     private static final int ALIEN_COLS = 11;
     private static final int ALIEN_WIDTH = 40;
     private static final int ALIEN_HEIGHT = 30;
     private static final int ALIEN_SPACING_X = 50;
     private static final int ALIEN_SPACING_Y = 40;
-    private static final int FORMATION_SPEED = 4;
-    private static final int FORMATION_DROP = 20;
+    private static final int FORMATION_SPEED = 3;
+    private static final int FORMATION_DROP = 10;
 
     private int playerX = SCREEN_WIDTH / 2;
     private boolean[][] aliensAlive = new boolean[ALIEN_ROWS][ALIEN_COLS];
