@@ -2,10 +2,6 @@ import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.FontMetrics;
-import java.awt.Image;
-import javax.imageio.ImageIO;
-import java.io.File;
-import java.io.IOException;
 
 public class GameView extends JPanel {
     // This class handles the graphical representation of the game.
@@ -13,7 +9,6 @@ public class GameView extends JPanel {
     // It only reads from the model and never modifies game state.
 
     private GameModel model;
-    private Image spaceshipImage;
     private static final int SCREEN_WIDTH = 800;
     private static final int SCREEN_HEIGHT = 600;
     private static final int PLAYER_WIDTH = 50;
@@ -27,12 +22,6 @@ public class GameView extends JPanel {
 
     public GameView() {
         setPreferredSize(new java.awt.Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
-        try {
-            spaceshipImage = ImageIO.read(new File("spaceship.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Fallback to null, will draw triangle if image fails to load
-        }
     }
 
     public void setModel(GameModel model) {
@@ -56,17 +45,12 @@ public class GameView extends JPanel {
             g.fillRect(x, y, 1, 1);
         }
 
-        // Draw player spaceship
+        // Draw player spaceship (triangle)
+        g.setColor(Color.CYAN);
         int playerY = SCREEN_HEIGHT - PLAYER_HEIGHT;
-        if (spaceshipImage != null) {
-            g.drawImage(spaceshipImage, model.getPlayerX(), playerY, PLAYER_WIDTH, PLAYER_HEIGHT, this);
-        } else {
-            // Fallback: draw triangle
-            g.setColor(Color.CYAN);
-            int[] xPoints = {model.getPlayerX() + PLAYER_WIDTH / 2, model.getPlayerX(), model.getPlayerX() + PLAYER_WIDTH};
-            int[] yPoints = {playerY, playerY + PLAYER_HEIGHT, playerY + PLAYER_HEIGHT};
-            g.fillPolygon(xPoints, yPoints, 3);
-        }
+        int[] xPoints = {model.getPlayerX() + PLAYER_WIDTH / 2, model.getPlayerX(), model.getPlayerX() + PLAYER_WIDTH};
+        int[] yPoints = {playerY, playerY + PLAYER_HEIGHT, playerY + PLAYER_HEIGHT};
+        g.fillPolygon(xPoints, yPoints, 3);
 
         // Draw aliens
         g.setColor(Color.GREEN);
