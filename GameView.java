@@ -33,9 +33,24 @@ public class GameView extends JPanel {
         super.paintComponent(g);
         if (model == null) return;
 
-        // Draw player
-        g.setColor(Color.BLUE);
-        g.fillRect(model.getPlayerX(), SCREEN_HEIGHT - PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT);
+        // Draw space background
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+        // Draw stars (simple random dots)
+        g.setColor(Color.WHITE);
+        for (int i = 0; i < 50; i++) {
+            int x = (int) (Math.random() * SCREEN_WIDTH);
+            int y = (int) (Math.random() * SCREEN_HEIGHT);
+            g.fillRect(x, y, 1, 1);
+        }
+
+        // Draw player spaceship (triangle)
+        g.setColor(Color.CYAN);
+        int playerY = SCREEN_HEIGHT - PLAYER_HEIGHT;
+        int[] xPoints = {model.getPlayerX() + PLAYER_WIDTH / 2, model.getPlayerX(), model.getPlayerX() + PLAYER_WIDTH};
+        int[] yPoints = {playerY, playerY + PLAYER_HEIGHT, playerY + PLAYER_HEIGHT};
+        g.fillPolygon(xPoints, yPoints, 3);
 
         // Draw aliens
         g.setColor(Color.GREEN);
@@ -50,21 +65,21 @@ public class GameView extends JPanel {
             }
         }
 
-        // Draw player bullet
-        g.setColor(Color.RED);
+        // Draw player bullet (bright white)
+        g.setColor(Color.WHITE);
         GameModel.Bullet pb = model.getPlayerBullet();
         if (pb != null) {
-            g.fillRect(pb.x - 2, pb.y - 5, 4, 10);
+            g.fillRect(pb.x - 1, pb.y - 10, 3, 10);
         }
 
-        // Draw alien bullets
-        g.setColor(Color.YELLOW);
+        // Draw alien bullets (bright red)
+        g.setColor(Color.RED);
         for (GameModel.Bullet b : model.getAlienBullets()) {
-            g.fillRect(b.x - 2, b.y, 4, 10);
+            g.fillRect(b.x - 1, b.y, 3, 10);
         }
 
         // Draw score and lives
-        g.setColor(Color.BLACK);
+        g.setColor(Color.WHITE);
         g.drawString("Score: " + model.getScore(), 10, 20);
         g.drawString("Lives: " + model.getLives(), 10, 40);
 
