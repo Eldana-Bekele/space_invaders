@@ -40,15 +40,24 @@ public class GameView extends JPanel {
         // Draw stars
         g.setColor(Color.WHITE);
         for (GameModel.Star s : model.getStars()) {
-            g.fillRect(s.x, s.y, 1, 1);
+            g.fillRect(s.x, s.y, s.size, s.size);
         }
 
-        // Draw player spaceship (triangle)
-        g.setColor(Color.CYAN);
+        // Draw player spaceship or explosion
         int playerY = SCREEN_HEIGHT - PLAYER_HEIGHT;
-        int[] xPoints = {model.getPlayerX() + PLAYER_WIDTH / 2, model.getPlayerX(), model.getPlayerX() + PLAYER_WIDTH};
-        int[] yPoints = {playerY, playerY + PLAYER_HEIGHT, playerY + PLAYER_HEIGHT};
-        g.fillPolygon(xPoints, yPoints, 3);
+        if (model.getExplosionTimer() > 0) {
+            // Draw explosion
+            g.setColor(Color.ORANGE);
+            g.fillOval(model.getPlayerX() - 10, playerY - 10, PLAYER_WIDTH + 20, PLAYER_HEIGHT + 20);
+            g.setColor(Color.RED);
+            g.fillOval(model.getPlayerX(), playerY, PLAYER_WIDTH, PLAYER_HEIGHT);
+        } else {
+            // Draw player spaceship (triangle)
+            g.setColor(Color.CYAN);
+            int[] xPoints = {model.getPlayerX() + PLAYER_WIDTH / 2, model.getPlayerX(), model.getPlayerX() + PLAYER_WIDTH};
+            int[] yPoints = {playerY, playerY + PLAYER_HEIGHT, playerY + PLAYER_HEIGHT};
+            g.fillPolygon(xPoints, yPoints, 3);
+        }
 
         // Draw aliens
         g.setColor(Color.GREEN);
@@ -58,22 +67,22 @@ public class GameView extends JPanel {
         for (int r = 0; r < ALIEN_ROWS; r++) {
             for (int c = 0; c < ALIEN_COLS; c++) {
                 if (alive[r][c]) {
-                    g.fillRect(fx + c * ALIEN_SPACING_X, fy + r * ALIEN_SPACING_Y, ALIEN_WIDTH, ALIEN_HEIGHT);
+                    g.fillOval(fx + c * ALIEN_SPACING_X, fy + r * ALIEN_SPACING_Y, ALIEN_WIDTH, ALIEN_HEIGHT);
                 }
             }
         }
 
-        // Draw player bullet (bright white)
-        g.setColor(Color.WHITE);
+        // Draw player bullet (yellow)
+        g.setColor(Color.YELLOW);
         GameModel.Bullet pb = model.getPlayerBullet();
         if (pb != null) {
-            g.fillRect(pb.x - 1, pb.y - 10, 3, 10);
+            g.fillRect(pb.x - 2, pb.y - 10, 4, 10);
         }
 
         // Draw alien bullets (bright red)
         g.setColor(Color.RED);
         for (GameModel.Bullet b : model.getAlienBullets()) {
-            g.fillRect(b.x - 1, b.y, 3, 10);
+            g.fillRect(b.x - 2, b.y, 4, 10);
         }
 
         // Draw score and lives

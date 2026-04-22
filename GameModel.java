@@ -33,6 +33,7 @@ public class GameModel {
     private int level = 1;
     private int alienBulletSpeed = 20;
     private int alienShootChance = 5;
+    private int explosionTimer = 0;
     private List<Star> stars = new ArrayList<>();
     private Random random = new Random();
 
@@ -43,7 +44,8 @@ public class GameModel {
             }
         }
         for (int i = 0; i < 50; i++) {
-            stars.add(new Star(random.nextInt(SCREEN_WIDTH), random.nextInt(SCREEN_HEIGHT), 1));
+            int size = random.nextInt(2) + 1; // 1 or 2
+            stars.add(new Star(random.nextInt(SCREEN_WIDTH), random.nextInt(SCREEN_HEIGHT), 1, size));
         }
     }
 
@@ -66,6 +68,7 @@ public class GameModel {
         playerBullet = null;
         alienBullets.clear();
         score = 0;
+        explosionTimer = 0;
         lives = 3;
     }
 
@@ -101,11 +104,16 @@ public class GameModel {
             }
         }
 
+        // Decrement explosion timer
+        if (explosionTimer > 0) {
+            explosionTimer--;
+        }
+
         // Move player
-        if (leftPressed) {
+        if (leftPressed && explosionTimer == 0) {
             playerX = Math.max(0, playerX - PLAYER_SPEED);
         }
-        if (rightPressed) {
+        if (rightPressed && explosionTimer == 0) {
             playerX = Math.min(SCREEN_WIDTH - PLAYER_WIDTH, playerX + PLAYER_SPEED);
         }
 
@@ -201,6 +209,7 @@ public class GameModel {
             if (b.x >= playerX && b.x <= playerX + PLAYER_WIDTH &&
                 b.y >= playerY && b.y <= playerY + PLAYER_HEIGHT) {
                 lives--;
+                explosionTimer = 20;
                 it.remove();
             }
         }
@@ -247,6 +256,7 @@ public class GameModel {
     public int getLives() { return lives; }
     public int getLevel() { return level; }
     public List<Star> getStars() { return stars; }
+    public int getExplosionTimer() { return explosionTimer; }
 
     public static class Bullet {
         public int x, y;
@@ -260,12 +270,13 @@ public class GameModel {
     }
 
     public static class Star {
-        public int x, y, dy;
+        public int x, y, dy, size;
 
-        public Star(int x, int y, int dy) {
+        public Star(int x, int y, int dy, int size) {
             this.x = x;
             this.y = y;
             this.dy = dy;
+            this.size = size;
         }
     }
 }
