@@ -8,15 +8,15 @@ public class GameModel {
     private static final int SCREEN_HEIGHT = 600;
     private static final int PLAYER_WIDTH = 50;
     private static final int PLAYER_HEIGHT = 50;
-    private static final int PLAYER_SPEED = 5;
-    private static final int BULLET_SPEED = 10;
+    private static final int PLAYER_SPEED = 10;
+    private static final int BULLET_SPEED = 20;
     private static final int ALIEN_ROWS = 5;
     private static final int ALIEN_COLS = 11;
     private static final int ALIEN_WIDTH = 40;
     private static final int ALIEN_HEIGHT = 30;
     private static final int ALIEN_SPACING_X = 50;
     private static final int ALIEN_SPACING_Y = 40;
-    private static final int FORMATION_SPEED = 2;
+    private static final int FORMATION_SPEED = 4;
     private static final int FORMATION_DROP = 20;
 
     private int playerX = SCREEN_WIDTH / 2;
@@ -36,6 +36,22 @@ public class GameModel {
                 aliensAlive[r][c] = true;
             }
         }
+    }
+
+    public void reset() {
+        playerX = SCREEN_WIDTH / 2;
+        for (int r = 0; r < ALIEN_ROWS; r++) {
+            for (int c = 0; c < ALIEN_COLS; c++) {
+                aliensAlive[r][c] = true;
+            }
+        }
+        alienFormationX = 50;
+        alienFormationY = 50;
+        movingRight = true;
+        playerBullet = null;
+        alienBullets.clear();
+        score = 0;
+        lives = 3;
     }
 
     public void movePlayerLeft() {

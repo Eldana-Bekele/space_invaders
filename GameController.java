@@ -22,6 +22,9 @@ public class GameController {
         frame.setLocationRelativeTo(null); // Center on screen
         frame.setFocusable(true);
 
+        // Declare timer for access in key listener
+        final Timer[] timerRef = new Timer[1];
+
         // Add key listener for player input
         frame.addKeyListener(new KeyAdapter() {
             @Override
@@ -36,20 +39,26 @@ public class GameController {
                     case KeyEvent.VK_SPACE:
                         model.firePlayerBullet();
                         break;
+                    case KeyEvent.VK_R:
+                        if (model.isGameOver() && timerRef[0] != null) {
+                            model.reset();
+                            timerRef[0].start();
+                        }
+                        break;
                 }
             }
         });
 
         frame.setVisible(true);
 
-        // Start game loop timer (50ms intervals)
-        Timer timer = new Timer(50, e -> {
+        // Start game loop timer (~60 FPS)
+        timerRef[0] = new Timer(16, e -> {
             model.update();
             view.repaint();
             if (model.isGameOver()) {
                 ((Timer) e.getSource()).stop();
             }
         });
-        timer.start();
+        timerRef[0].start();
     }
 }

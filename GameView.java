@@ -68,6 +68,12 @@ public class GameView extends JPanel {
         g.drawString("Score: " + model.getScore(), 10, 20);
         g.drawString("Lives: " + model.getLives(), 10, 40);
 
+        // Draw instructions
+        g.drawString("Arrow keys: move, Space: fire", 10, SCREEN_HEIGHT - 40);
+        if (model.isGameOver()) {
+            g.drawString("Press R to restart", 10, SCREEN_HEIGHT - 20);
+        }
+
         // Draw game over message if game is over
         if (model.isGameOver()) {
             g.setColor(Color.RED);
